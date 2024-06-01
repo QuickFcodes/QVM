@@ -111,19 +111,9 @@ void eval() {
         continue;
     }
 }
-void fileload(char * name) {
-    FILE * a;
-    int c,i=0;
-    a = fopen(name,"r");
-    while(1) {
-        if(feof(a))break;
-        fread(&c,sizeof(c),1,a);
-        mbook[i] = c;
-        i++;
-    }
-}
 int main(int argc,char ** argv) {
-    if(argc<2)error(2);
-    fileload(argv[1]);
+    use(0) = debug;
+    use(1) = 0;
+    use(2) = EXITC;
     eval();
 }

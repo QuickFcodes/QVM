@@ -38,3 +38,6 @@ void push(int num);
 int pop(void);
 void eval();
 void ints(int codes);
+int random(int min,int max) {
+    return rand()%(max-min+1)+min;
+}

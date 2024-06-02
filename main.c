@@ -27,6 +27,11 @@ void error(int codes) {
     }
     exit(1);
 }
+void comwrite(int x) {
+    static int z = 0;
+    mbook[z] = x;
+    z++;
+}
 void push(int num) {
     stack[pos] = num;
     pos<RAMMAX?pos++:0;
@@ -219,5 +224,13 @@ void eval() {
     }
 }
 int main(int argc,char ** argv) {
+    comwrite(debug);
+    comwrite(0);
+    comwrite(MOV);
+    comwrite(0);
+    comwrite(17);
+    comwrite(debug);
+    comwrite(0);
+    comwrite(EXITC);
     eval();
 }

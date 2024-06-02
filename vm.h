@@ -16,6 +16,22 @@
 #define CALL 12
 #define JMR 13
 #define CALLC 14
+#define SUB 15
+#define SUBR 16
+#define POP 17
+#define PSH 18
+#define PSHC 19
+#define MUL 20
+#define MULR 21
+#define INC 22
+#define CMP 23
+#define CMPR 24
+#define JAE 25//==
+#define JQE 26//>
+#define JKE 27//<
+#define JNE 28//!=
+#define JCE 29//>=
+#define JIE 30//<=
 #define use(g) mbook[g]
 void push(int num);
 int pop(void);

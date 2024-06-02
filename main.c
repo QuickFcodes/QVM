@@ -219,6 +219,5 @@ void eval() {
     }
 }
 int main(int argc,char ** argv) {
-    loader(mbook,argv[1]);
     eval();
 }

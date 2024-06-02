@@ -1,8 +1,10 @@
 cmd = {
     "exitc":"9",
     "movrc":"6",
+    "right":"33",
     "debug":"8",
     "callc":"14",
+    "left":"32",
     "mova":"7",
     "call":"12",
     "cmpr":"24",

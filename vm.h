@@ -34,6 +34,8 @@
 #define JCE 29//>=
 #define JIE 30//<=
 #define INT 31
+#define LEFT 32
+#define RIGHT 33
 #define use(g) mbook[g]
 void push(int num);
 int pop(void);

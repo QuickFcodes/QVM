@@ -7,6 +7,14 @@ vm mbook={zerod};
 int erx[64]={zeros},i=0,iflags=0;
 int stack[RAMMAX]={zerod};
 int pos=0;
+void load(const char name[]) {
+    FILE * fp = fopen(name,"rb");
+    if(fp==NULL)error(4);
+    int num1 = 0;
+    while((fscanf(fp,"%d\n",&num1)) != EOF)comwrite(num1);
+    fclose(fp);
+    return;
+}
 void error(int codes) {
     switch (codes)
     {
@@ -21,6 +29,12 @@ void error(int codes) {
         break;
     case 3:
         printf("ERROR:Not found int_codes.\n");
+        break;
+    case 4:
+        printf("ERROR:Not found file.\n");
+        break;
+    case 5:
+        printf("ERROR:Too much parameters.\n");
         break;
     default:
         break;
@@ -223,14 +237,15 @@ void eval() {
         continue;
     }
 }
-int main(int argc,char ** argv) {
-    comwrite(debug);
-    comwrite(0);
-    comwrite(MOV);
-    comwrite(0);
-    comwrite(17);
-    comwrite(debug);
-    comwrite(0);
-    comwrite(EXITC);
+int main(int argc,char * argv[]) {
+    if(argc==2) {
+        load(argv[1]);
+    }
+    else if(argc==1) {
+        error(2);
+    }
+    else {
+        error(5);
+    }
     eval();
 }

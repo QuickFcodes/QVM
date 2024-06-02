@@ -19,6 +19,9 @@ void error(int codes) {
     case 2:
         printf("ERROR:No input file.\n");
         break;
+    case 3:
+        printf("ERROR:Not found int_codes.\n");
+        break;
     default:
         break;
     }
@@ -30,6 +33,15 @@ void push(int num) {
 }
 int pop(void) {
     return pos<0?pos++:0,stack[pos--];
+}
+void ints(int codes) {
+    switch(codes) {
+        case 0x10:
+            printf("%c",(char)erx[15]);
+            break;
+        default:
+            error(3);
+    }
 }
 void eval() {
     for(;i<1024;i++) {
@@ -187,6 +199,10 @@ void eval() {
             if(mbook[i+1]>=1024)error(1);
             if((iflags==2) || (iflags==0))i=mbook[i+1];
             i--;
+            break;
+        case INT:
+            ints(mbook[i+1]);
+            i++;
             break;
         case EXITC:
             exit(0);

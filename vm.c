@@ -4,7 +4,7 @@ typedef int vm[1024];
 
 vm mbook={zerod};
 
-int erx[64]={zeros},i=0,ifg=0;
+int erx[64]={zeros},i=0,iflags=0;
 int stack[1024]={zerod};
 int pos=0;
 void error(int codes) {
@@ -101,6 +101,91 @@ void eval() {
             if(erx[mbook[i+1]]>=1024)error(1);
             push(i+2);
             i=erx[mbook[i+1]];
+            i--;
+            break;
+        case SUB:
+            if(mbook[i+1]>=64)error(0);
+            erx[mbook[i+1]] -= mbook[i+2];
+            i+=2;
+            break;
+        case SUBR:
+            if(mbook[i+1]>=64)error(0);
+            if(mbook[i+2]>=64)error(0);
+            erx[mbook[i+1]] -= erx[mbook[i+2]];
+            i+=2;
+            break;
+        case POP:
+            if(mbook[i+1]>=64)error(0);
+            erx[mbook[i+1]] = pop();
+            i++;
+            break;
+        case PSH:
+            if(mbook[i+1]>=64)error(0);
+            push(erx[mbook[i+1]]);
+            i++;
+            break;
+        case PSHC://push num
+            push(mbook[i+1]);
+            i++;
+            break;
+        case MUL:
+            if(mbook[i+1]>=64)error(0);
+            erx[mbook[i+1]] *= mbook[i+2];
+            i+=2;
+            break;
+        case MULR:
+            if(mbook[i+1]>=64)error(0);
+            if(mbook[i+2]>=64)error(0);
+            erx[mbook[i+1]] *= erx[mbook[i+2]];
+            i+=2;
+            break;
+        case INC:
+            if(mbook[i+1]>=64)error(0);
+            erx[mbook[i+1]]++;
+            i++;
+            break;
+        case CMP://cmp reg num
+            if(mbook[i+1]>=64)error(0);
+            if(erx[mbook[i+1]]==mbook[i+2])iflags=0;
+            if(erx[mbook[i+1]]>=mbook[i+2])iflags=1;
+            if(erx[mbook[i+1]]<=mbook[i+2])iflags=2;
+            i+=2;
+            break;
+        case CMPR://cmp reg reg
+            if(mbook[i+1]>=64)error(0);
+            if(erx[mbook[i+1]]==erx[mbook[i+2]])iflags=0;
+            if(erx[mbook[i+1]]>=erx[mbook[i+2]])iflags=1;
+            if(erx[mbook[i+1]]<=erx[mbook[i+2]])iflags=2;
+            i+=2;
+            break;
+        case JAE:
+            if(mbook[i+1]>=1024)error(1);
+            if(iflags==0)i=mbook[i+1];
+            i--;
+            break;
+        case JQE:
+            if(mbook[i+1]>=1024)error(1);
+            if(iflags==1)i=mbook[i+1];
+            i--;
+            break;
+        case JKE:
+            if(mbook[i+1]>=1024)error(1);
+            if(iflags==2)i=mbook[i+1];
+            i--;
+            break;
+        case JNE:
+            if(mbook[i+1]>=1024)error(1);
+            if(iflags!=0)i=mbook[i+1];
+            i--;
+            break;
+        case JCE:
+            if(mbook[i+1]>=1024)error(1);
+            if((iflags==1) || (iflags==0))i=mbook[i+1];
+            i--;
+            break;
+        case JIE:
+            if(mbook[i+1]>=1024)error(1);
+            if((iflags==2) || (iflags==0))i=mbook[i+1];
             i--;
             break;
         case EXITC:

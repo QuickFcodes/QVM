@@ -32,7 +32,9 @@
 #define JNE 28//!=
 #define JCE 29//>=
 #define JIE 30//<=
+#define INT 31
 #define use(g) mbook[g]
 void push(int num);
 int pop(void);
 void eval();
+void ints(int codes);

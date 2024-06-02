@@ -229,6 +229,16 @@ void eval() {
             ints(mbook[i+1]);
             i++;
             break;
+        case LEFT:
+            if(mbook[i+1]>=64)error(0);
+            erx[mbook[i+1]] <<= mbook[i+2];
+            i+=2;
+            break;
+        case RIGHT:
+            if(mbook[i+1]>=64)error(0);
+            erx[mbook[i+1]] >>= mbook[i+2];
+            i+=2;
+            break;
         case EXITC:
             exit(0);
         default:

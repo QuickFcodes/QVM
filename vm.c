@@ -36,8 +36,14 @@ int pop(void) {
 }
 void ints(int codes) {
     switch(codes) {
-        case 0x10:
+        case 10:
             printf("%c",(char)erx[15]);
+            break;
+        case 15:
+            erx[31] = random(erx[32],erx[33]);
+            break;
+        case 20:
+            erx[34] = getchar();
             break;
         default:
             error(3);
@@ -218,3 +224,4 @@ int main(int argc,char ** argv) {
     use(2) = EXITC;
     eval();
 }
+

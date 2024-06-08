@@ -1,9 +1,11 @@
 cmd = {
+    "malloc":"38",
     "exitc":"9",
     "movrc":"6",
     "right":"33",
     "debug":"8",
     "callc":"14",
+    "free":"39",
     "left":"32",
     "mova":"7",
     "call":"12",
@@ -31,9 +33,16 @@ cmd = {
     "jke":"27",
     "jne":"28",
     "jce":"29",
-    "jie":"30"
+    "jie":"30",
+    "and":"34",
+    "xor":"37",
+    "not":"36",
+    "or":"35"
 }
-
+#define AND 34
+#define OR 35
+#define NOT 36
+#define XOR 37
 while 1:
     g:str = input("> ")
     if g=='exit':

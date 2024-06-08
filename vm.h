@@ -1,4 +1,4 @@
-#define RAMMAX 4096
+#define RAMMAX INT_MAX
 #include <stdio.h>
 #include <stdlib.h>
 #define zeros 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
@@ -36,7 +36,14 @@
 #define INT 31
 #define LEFT 32
 #define RIGHT 33
-#define use(g) mbook[g]
+#define AND 34
+#define OR 35
+#define NOT 36
+#define XOR 37
+#define MALLOC 38
+#define FREE 39
+#define DIV 40
+#define DIVR 41
 void push(int num);
 int pop(void);
 void eval();
@@ -44,6 +51,5 @@ void ints(int codes);
 int random(int min,int max) {
     return rand()%(max-min+1)+min;
 }
-void comwrite(int x);
 void load(const char name[]);
 void error(int codes);

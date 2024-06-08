@@ -1,17 +1,16 @@
 #include "vm.h"
+#include <vector>
+typedef std::vector<int> vm;
 
-typedef int vm[RAMMAX];
-
-vm mbook={zerod};
+vm mbook;
 
 int erx[64]={zeros},i=0,iflags=0;
-int stack[RAMMAX]={zerod};
-int pos=0;
+vm stack;
 void load(const char name[]) {
     FILE * fp = fopen(name,"rb");
     if(fp==NULL)error(4);
     int num1 = 0;
-    while((fscanf(fp,"%d\n",&num1)) != EOF)comwrite(num1);
+    while((fscanf(fp,"%d\n",&num1)) != EOF)mbook.push_back(num1);
     fclose(fp);
     return;
 }
@@ -41,17 +40,12 @@ void error(int codes) {
     }
     exit(1);
 }
-void comwrite(int x) {
-    static int z = 0;
-    mbook[z] = x;
-    z++;
-}
 void push(int num) {
-    stack[pos] = num;
-    pos<RAMMAX?pos++:0;
+    stack.push_back(num);
 }
 int pop(void) {
-    return pos<0?pos++:0,stack[pos--];
+    int c = stack[stack.size()-1];
+    return stack.pop_back(),c;
 }
 void ints(int codes) {
     switch(codes) {
@@ -176,6 +170,17 @@ void eval() {
             erx[mbook[i+1]] *= erx[mbook[i+2]];
             i+=2;
             break;
+        case DIV:
+            if(mbook[i+1]>=64)error(0);
+            erx[mbook[i+1]] /= mbook[i+2];
+            i+=2;
+            break;
+        case DIVR:
+            if(mbook[i+1]>=64)error(0);
+            if(mbook[i+2]>=64)error(0);
+            erx[mbook[i+1]] /= erx[mbook[i+2]];
+            i+=2;
+            break;
         case INC:
             if(mbook[i+1]>=64)error(0);
             erx[mbook[i+1]]++;
@@ -183,47 +188,43 @@ void eval() {
             break;
         case CMP://cmp reg num
             if(mbook[i+1]>=64)error(0);
-            if(erx[mbook[i+1]]==mbook[i+2])iflags=0;
-            if(erx[mbook[i+1]]>=mbook[i+2])iflags=1;
-            if(erx[mbook[i+1]]<=mbook[i+2])iflags=2;
-            i+=2;
+            if(erx[mbook[i+1]]==mbook[i+2]){iflags=0;goto t;}
+            if(erx[mbook[i+1]]>mbook[i+2]){iflags=1;goto t;}
+            if(erx[mbook[i+1]]<mbook[i+2]){iflags=2;goto t;}
+            t:
+                i+=2;
             break;
         case CMPR://cmp reg reg
             if(mbook[i+1]>=64)error(0);
-            if(erx[mbook[i+1]]==erx[mbook[i+2]])iflags=0;
-            if(erx[mbook[i+1]]>=erx[mbook[i+2]])iflags=1;
-            if(erx[mbook[i+1]]<=erx[mbook[i+2]])iflags=2;
-            i+=2;
+            if(erx[mbook[i+1]]==erx[mbook[i+2]]){iflags=0;goto ell;}
+            if(erx[mbook[i+1]]>erx[mbook[i+2]]){iflags=1;goto ell;}
+            if(erx[mbook[i+1]]<erx[mbook[i+2]]){iflags=2;goto ell;}
+            ell:
+                i+=2;
             break;
         case JAE:
             if(mbook[i+1]>=RAMMAX)error(1);
-            if(iflags==0)i=mbook[i+1];
-            i--;
+            if(iflags==0){i=mbook[i+1];i--;}
             break;
         case JQE:
             if(mbook[i+1]>=RAMMAX)error(1);
-            if(iflags==1)i=mbook[i+1];
-            i--;
+            if(iflags==1){i=mbook[i+1];i--;}
             break;
         case JKE:
             if(mbook[i+1]>=RAMMAX)error(1);
-            if(iflags==2)i=mbook[i+1];
-            i--;
+            if(iflags==2){i=mbook[i+1];i--;}
             break;
         case JNE:
             if(mbook[i+1]>=RAMMAX)error(1);
-            if(iflags!=0)i=mbook[i+1];
-            i--;
+            if(iflags!=0){i=mbook[i+1];i--;}
             break;
         case JCE:
             if(mbook[i+1]>=RAMMAX)error(1);
-            if((iflags==1) || (iflags==0))i=mbook[i+1];
-            i--;
+            if((iflags==1) || (iflags==0)){i=mbook[i+1];i--;}
             break;
         case JIE:
             if(mbook[i+1]>=RAMMAX)error(1);
-            if((iflags==2) || (iflags==0))i=mbook[i+1];
-            i--;
+            if((iflags==2) || (iflags==0)){i=mbook[i+1];i--;}
             break;
         case INT:
             ints(mbook[i+1]);
@@ -238,6 +239,40 @@ void eval() {
             if(mbook[i+1]>=64)error(0);
             erx[mbook[i+1]] >>= mbook[i+2];
             i+=2;
+            break;
+        case AND:
+            if(mbook[i+1]>=64)error(0);
+            erx[mbook[i+1]] = erx[mbook[i+1]]&mbook[i+2];
+            i+=2;
+            break;
+        case OR:
+            if(mbook[i+1]>=64)error(0);
+            erx[mbook[i+1]] = erx[mbook[i+1]]|mbook[i+2];
+            i+=2;
+            break;
+        case NOT:
+            if(mbook[i+1]>=64)error(0);
+            erx[mbook[i+1]] = !mbook[i+2];
+            i+=2;
+            break;
+        case XOR:
+            if(mbook[i+1]>=64)error(0);
+            erx[mbook[i+1]] = erx[mbook[i+1]]^mbook[i+2];
+            i+=2;
+            break;
+        case MALLOC:
+            if(mbook[i+1]>=64)error(0);
+            for(int j;j<erx[mbook[i+1]];j++) {
+                mbook.push_back(0);
+            }
+            i+=1;
+            break;
+        case FREE:
+            if(mbook[i+1]>=64)error(0);
+            for(int j;j<erx[mbook[i+1]];j++) {
+                mbook.pop_back();
+            }
+            i+=1;
             break;
         case EXITC:
             exit(0);
